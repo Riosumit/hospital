@@ -112,14 +112,3 @@ def doctor_dashboard(request):
     user_detail = UserDetail.objects.get(user=request.user)
     serializer = UserDetailSerializer(user_detail)
     return render(request, 'doctor_dashboard.html', {"user_detail": serializer.data})
-
-# # urls.py
-# from django.urls import path
-# from . import views
-
-# urlpatterns = [
-#     path('signup/', views.signup, name='signup'),
-#     path('login/', views.user_login, name='login'),
-#     path('logout/', views.user_logout, name='logout'),
-#     # Add URL patterns for dashboard views
-# ]
