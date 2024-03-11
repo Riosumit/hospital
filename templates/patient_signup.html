@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <title>Signup</title>
+</head>
+
+<body>
+    <a href="/doctor/signup" class="change">Signup as a Doctor</a>
+    <div class="form_box">
+        <h2>Signup As a Patient</h2>
+        <form action="/patient/signup" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="format">
+
+                <label for="first_name">First Name:<br>
+                    <input type="text" id="first_name" name="first_name" value="{{ user_data.first_name }}" placeholder="First Name" required>
+                </label>
+    
+                <label for="last_name">Last Name:<br>
+                    <input type="text" id="last_name" name="last_name" value="{{ user_data.last_name }}" placeholder="Last Name" required>
+                </label>
+
+            </div>
+
+            <div class="format">
+
+                <label for="username">Username:<br>
+                    <input type="text" id="username" name="username" value="{{ user_data.username }}" placeholder="Username" required>
+                </label>
+    
+                <label for="email">Email:<br>
+                    <input type="email" id="email" name="email" value="{{ user_data.email }}" placeholder="Email" required>
+                </label>
+
+            </div>
+
+            <div class="format">
+
+                <label for="password">Password:<br>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </label>
+    
+                <label for="confirm_password">Confirm Password:<br>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                </label>
+
+            </div>
+
+            <div class="format">
+
+                <label for="line">Address :<br>
+                    <input type="text" id="line" name="line" value="{{ user_data.line }}" placeholder="Lane Number" required>  
+                </label>
+                <label for="city"><br>
+                    <input type="text" id="city" name="city" value="{{ user_data.city }}" placeholder="City" required>
+                </label>
+
+            </div>
+
+            <div class="format">
+
+                <label for="state"><br>
+                    <input type="text" id="state" name="state" value="{{ user_data.state }}" placeholder="State" required>
+                </label>
+
+                <label for="pincode"><br>
+                    <input type="text" id="pincode" name="pincode" value="{{ user_data.pincode }}" placeholder="PIN Code" required>
+                </label>
+
+            </div>
+            
+            <div class="format" style="width: 100%;">
+                <label for="profile_picture">Profile Picture:<br>
+                    <input type="file" id="profile_picture" name="profile_picture" value="{{ user_data.profile_picture }}" required><br>
+                </label>
+            </div>
+            <p style="color: rgb(255, 60, 60);">{{msg}}</p>
+            <button type="submit">Sign Up</button>
+            <p>Already have an account <a href="/login">Login</a></p>
+        </form>
+    </div>
+</body>
+
+</html>

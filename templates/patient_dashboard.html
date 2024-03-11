@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <title>Patient Dashboard</title>
+</head>
+<body>
+    <nav>
+        <div class="title">
+            <i class="fa fa-hospital-o" aria-hidden="true" style="font-size: 34px; padding: 0px 15px;"></i>
+            <h1>Hospital</h1>
+        </div>
+        <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true" style="font-size: 35px;"></i></a>
+    </nav>
+    <h2 style="font-size: xx-large;">Welcome to the Patient Dashboard</h2>
+    <div class="personal">
+        {% if profile_picture %}
+            <img src={{ profile_picture }} alt="Profile Picture">
+        {% endif %}
+        <div class="">
+            <h3>Hi {{user.username}} !!</h3>
+            <table>
+                <tr>
+                    <th>Name:</th>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Address:</th>
+                    <td>{{ line }},{{city}},{{state}}-{{pincode}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

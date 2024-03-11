@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <title>Signup</title>
+    <style>
+        input{
+            margin: 0px 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="form_box">
+        <h2>Login</h2>
+        <form action="/login" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ user_data.username }}" required><br>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            
+            <p style="color: rgb(255, 60, 60);">{{msg}}</p>
+            <button type="submit">Login</button>
+            <p>Don't have an account? <a href="/patient/signup">Sign Up</a></p>
+        </form>
+    </div>
+</body>
+</html>
