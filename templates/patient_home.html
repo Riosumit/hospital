@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {%load static%}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <title>Patient Dashboard</title>
+</head>
+<body>
+    <nav>
+        <a href="home"><div class="title">
+            <i class="fa fa-hospital-o" aria-hidden="true" style="font-size: 34px; padding: 0px 15px;"></i>
+            <h1>Hospital</h1>
+        </div></a>
+        <div class="links">
+            <a href="dashboard"><i class="fa fa-user" aria-hidden="true" style="font-size: 35px;"></i></a>
+            <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true" style="font-size: 35px;"></i></a>
+        </div>
+    </nav>
+    <div class="blogs">
+        <h1>Blogs</h1><hr style="width: 100%;">
+        <div class="blog_box">
+            <form class="filter" method="post">
+                {% csrf_token %}
+                <h2>Filter</h2>
+                <label for="MentalHealth">
+                    <input type="checkbox" id="MentalHealth" name="MentalHealth" {% if filtered_categories.mental %}checked{% endif %}>&nbsp;Mental Health
+                </label>
+                <label for="HeartDisease">
+                    <input type="checkbox" id="HeartDisease" name="HeartDisease" {% if filtered_categories.heart %}checked{% endif %}>&nbsp;Heart Disease
+                </label>
+                <label for="Covid19">
+                    <input type="checkbox" id="Covid19" name="Covid19" {% if filtered_categories.covid %}checked{% endif %}>&nbsp;Covid19
+                </label>
+                <label for="Immunization">
+                    <input type="checkbox" id="Immunization" name="Immunization" {% if filtered_categories.immunization %}checked{% endif %}>&nbsp;Immunization
+                </label>
+                <input type="text" id="section" name="section" value="{{section}}" style="display: none;">
+                <button type="submit">Filter</button>
+            </form>
+            <div class="list">
+                <div id="all_post_list">
+                    {% if blogs %}
+                    {% for blog in blogs %}
+                    <div class="blog">
+                        <img src="{{ blog.image }}" alt="{{blog.title}}">
+                        <div class="content">
+                            <h2>{{ blog.title }}</h2>
+                            <p class="category"><b>Category :</b> {{ blog.category }}</p>
+                            <p class="summary"><b>Summary :</b> {{ blog.summary_short }}</p>
+                        </div>
+                        <!-- Add more details here as needed -->
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No blogs found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

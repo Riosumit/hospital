@@ -1,0 +1,78 @@
+.blogs{
+    width: 1300px;
+    margin: auto;
+    max-width: 95vw;
+}
+.blogs h1{
+    font-size: xx-large;
+}
+.navigation{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin: 10px;
+}
+.navigation p{
+    padding: 5px;
+    font-size: larger;
+    font-weight: 600;
+    cursor: pointer;
+}
+.blogs .blog{
+    display: flex;
+    margin: 10px;
+    justify-content: space-around;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    padding: 20px;
+    border-radius: 8px;
+}
+.blogs .blog_box{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    margin-top: 20px;
+}
+.blogs .blog_box .filter{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: start;
+    width: fit-content;
+    font-size: 110%;
+}
+.blogs .blog_box .filter button{
+    width: 70%;
+    height: 30px;
+    margin: 5px auto;
+    font-size: large;
+}
+.blogs .blog_box .list{
+    width: 75%;
+}
+.blogs .blog img{
+    width: 25%;
+    height: 150px;
+    object-fit: cover;
+}
+.blogs .blog .content{
+    width: 70%;
+}
+.blogs .blog .content h2{
+    font-size: x-large;
+}
+.blogs .blog .content .category{
+    font-size: larger;
+}
+.blogs .blog .content .summary{
+    font-size: larger;
+}
+.blogs .blog .drafted{
+    font-size: small;
+    font-weight: 700;
+    background-color: rgb(145, 135, 135);
+    padding: 5px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}

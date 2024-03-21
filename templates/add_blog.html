@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load static %}
+    <script src="https://cdn.tiny.cloud/1/vvbxfx9nrexm4ygoz8kw7w6053omopvt1ncvy0qrwa7urwzy/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/addblog.css' %}">
+    <title>Add Blog Post</title>
+</head>
+<body>
+    <nav>
+        <a href="home">
+            <div class="title">
+                <i class="fa fa-hospital-o" aria-hidden="true" style="font-size: 34px; padding: 0px 15px;"></i>
+                <h1>Hospital</h1>
+            </div>
+        </a>
+        <div class="links">
+            <a href="/blog/add" style="font-size: x-large;"><i class="fa fa-plus" aria-hidden="true"
+                    style="font-size: 25px;"></i>Add Blog</a>
+            <a href="dashboard"><i class="fa fa-user" aria-hidden="true" style="font-size: 35px;"></i></a>
+            <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true" style="font-size: 35px;"></i></a>
+        </div>
+    </nav>
+    <h1>Add Blog Post</h1>
+    <form id="blog-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="top">
+            <label for="title">Title:
+                <input type="text" id="title" name="title" value="{{ data.title }}" required>
+            </label>
+            <label for="image">Image:
+                <input type="file" id="image" name="image" required>
+            </label>
+            <label for="category">Category:
+                <select id="category" name="category">
+                    <option value="Mental Health" {% if data.category == "Mental Health" %}selected{% endif %}>Mental Health</option>
+                    <option value="Heart Disease" {% if data.category == "Heart Disease" %}selected{% endif %}>Heart Disease</option>
+                    <option value="Covid19" {% if data.category == "Covid19" %}selected{% endif %}>Covid19</option>
+                    <option value="Immunization" {% if data.category == "Immunization" %}selected{% endif %}>Immunization</option>
+                </select>
+            </label>
+        </div>
+
+        <label for="summary">Summary:
+            <textarea id="summary" name="summary" rows="5">{{ data.summary }}</textarea>
+        </label>
+        
+        <label for="content-box">Content:
+            <textarea id="content" name="content" style="display: none;"></textarea>
+            <textarea id="content-box" name="content-box">{{ data.content }}</textarea>
+        </label>
+        <div style="display: flex; align-items: center;">
+            <input type="checkbox" id="draft" name="draft" {% if data.draft %}checked{% endif %}>
+            <label for="draft">Draft</label>
+        </div>
+        <p style="text-align: center; font-size: large; font-weight: 500;">{{msg}}</p>
+        <input type="button" value="Post" id="save-btn">
+    </form>
+
+    <script>
+        tinymce.init({
+            selector: '#content-box',
+            plugins: 'autolink lists link image charmap print preview hr anchor pagebreak',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            menubar: false,
+            height: 250,
+            setup: function (editor) {
+                editor.setContent('{{ data.content }}');
+            }
+        });
+
+        document.getElementById('save-btn').addEventListener('click', function () {
+            getContentAndSubmit();
+        });
+
+        function getContentAndSubmit() {
+            var editor = tinymce.get('content-box');
+            if (editor) {
+                var content = editor.getContent();
+                document.getElementById('content').value = content;
+            }
+            console.log()
+            document.getElementById('blog-form').submit();
+        }
+    </script>
+</body>
+</html>

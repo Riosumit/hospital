@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$p2at_j#1$)=xi2eaohvgfe$koxcqvw2!hwrzzo4u&dk=dhowq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -79,12 +79,12 @@ WSGI_APPLICATION = 'hospital.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'wyEXlKPvpmbEClJLBGOBzugGNYZaGOhT',
-        'HOST': 'viaduct.proxy.rlwy.net',
-        'PORT': '41264',
+        'USER': 'root',
+        'PASSWORD': 'GrcvqEOjhmufYDgCbGFUxHfviIKnIIik',
+        'HOST': 'monorail.proxy.rlwy.net',
+        'PORT': '59669',
     }
 }
 
@@ -124,12 +124,16 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+if DEBUG:
+    STATICFILES_DIRS = [
+        BASE_DIR / "staticfiles",
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "./interface/build/static"),
-    os.path.join(BASE_DIR, "./interface/build"),
-]
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'staticfiles')
+    ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

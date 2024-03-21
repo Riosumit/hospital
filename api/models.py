@@ -11,3 +11,19 @@ class UserDetail(models.Model):
     state = models.CharField(max_length=20)
     pincode = models.CharField(max_length=6)
     user_type = models.CharField(max_length=10, choices=[('patient', 'Patient'), ('doctor', 'Doctor')])
+
+class Blog(models.Model):
+    CATEGORY_CHOICES = [
+        ('Mental Health', 'Mental Health'),
+        ('Heart Disease', 'Heart Disease'),
+        ('Covid19', 'Covid19'),
+        ('Immunization', 'Immunization')
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='blog_images/')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    summary = models.CharField(max_length=255)
+    content = models.TextField(blank=True)
+    draft = models.BooleanField(default=True)
