@@ -79,7 +79,7 @@
                             <p class="category"><b>Category :</b> {{ blog.category }}</p>
                             <p class="summary"><b>Summary :</b> {{ blog.summary_short }}</p>
                         </div>
-                        {% if draft %}
+                        {% if blog.draft %}
                         <p class="drafted">Drafted</p>
                         {% endif %}
                     </div>
