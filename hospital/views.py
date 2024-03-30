@@ -22,7 +22,8 @@ def google_auth_redirect(request):
         'redirect_uri': redirect_uri,
         'response_type': 'code',
         'scope': 'openid email profile https://www.googleapis.com/auth/calendar',
-        'prompt': 'consent' 
+        'prompt': 'consent',
+        'access_type': 'offline'
     }
     auth_url = f'https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}'
     return redirect(auth_url)
