@@ -260,7 +260,7 @@ def appointment(request):
         return redirect('login')
     elif request.session.get('user_type') != 'patient':
         return redirect('home')
-    doctors = UserDetail.objects.filter(user_type="doctor")
+    doctors = UserDetail.objects.filter(user_type="doctor")[2:]
     serializer = UserDetailSerializer(doctors, many=True)
     return render(request, 'appointment.html', {'doctors': doctors})
 

@@ -26,7 +26,7 @@
         {% for doctor in doctors %}
         <div class="card">
             {% if doctor.profile_picture %}
-            <img src="{{ doctor.profile_picture }}" alt="{{doctor.user.username}}">
+            <img src="https://res.cloudinary.com/dusnzf3o5/image/upload/v1/{{ doctor.profile_picture }}" alt="{{doctor.user.username}}">
             {% endif %}
             <h2>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
             <a href="appointment/book_appointment/{{ doctor.user.id }}">Book Appointment</a>
