@@ -152,4 +152,4 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 GOOGLE_OAUTH2_CLIENT_ID = '274783570595-d50u7k1e9rmg804i5susufd2q5m1ui08.apps.googleusercontent.com'
 GOOGLE_OAUTH2_CLIENT_SECRET = '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'
-GOOGLE_OAUTH2_CALLBACK_URL = 'http://localhost:8000/auth/google/callback'
+GOOGLE_OAUTH2_CALLBACK_URL = 'https://hospital-git-main-riosumit.vercel.app/auth/google/callback'
