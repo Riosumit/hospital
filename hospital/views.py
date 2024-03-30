@@ -44,7 +44,7 @@ def google_auth_callback(request):
     refresh_token = token_response.get('refresh_token')
     print(token_response)
     print(access_token, refresh_token)
-    if(not access_token):
+    if((not access_token) or (not refresh_token)):
         return redirect('google_auth_redirect')
     my_token = json.dumps({
         'token': access_token,
