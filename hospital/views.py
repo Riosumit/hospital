@@ -3,8 +3,62 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from api.models import UserDetail, Blog
 from api.serializers import UserDetailSerializer, BlogSerializer, DetailBlogSerializer
+from datetime import timedelta, datetime
+from google.auth import jwt
+from google.oauth2 import id_token
+import requests as google_requests
+from django.conf import settings
+from googleapiclient.discovery import build
+import google.oauth2.credentials
+import json
+from urllib.parse import urlencode
 
 # Create your views here.
+
+def google_auth_redirect(request):
+    redirect_uri = settings.GOOGLE_OAUTH2_CALLBACK_URL
+    params = {
+        'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
+        'redirect_uri': redirect_uri,
+        'response_type': 'code',
+        'scope': 'openid email profile https://www.googleapis.com/auth/calendar',
+        'prompt': 'consent' 
+    }
+    auth_url = f'https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}'
+    return redirect(auth_url)
+
+def google_auth_callback(request):
+    code = request.GET.get('code')
+    redirect_uri = settings.GOOGLE_OAUTH2_CALLBACK_URL
+    token_endpoint = 'https://oauth2.googleapis.com/token'
+    response = google_requests.post(token_endpoint, json={
+        'code': code,
+        'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
+        'client_secret': settings.GOOGLE_OAUTH2_CLIENT_SECRET,
+        'redirect_uri': redirect_uri,
+        'grant_type': 'authorization_code',
+    })
+    token_response = response.json()
+    access_token = token_response.get('access_token')
+    refresh_token = token_response.get('refresh_token')
+    print(token_response)
+    print(access_token, refresh_token)
+    if(not access_token):
+        return redirect('google_auth_redirect')
+    my_token = json.dumps({
+        'token': access_token,
+        'refresh_token': token_response.get('refresh_token'),
+        'token_uri': 'https://oauth2.googleapis.com/token',
+        'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
+        'client_secret': settings.GOOGLE_OAUTH2_CLIENT_SECRET
+    })
+    email = request.session['email']
+    user = User.objects.get(email=email)
+    user_detail = UserDetail.objects.get(user=user)
+    user_detail.google_auth_token = my_token
+    user_detail.save()
+    login(request, user)
+    return redirect('home')
 
 def doctor_signup(request):
     msg=""
@@ -29,10 +83,9 @@ def doctor_signup(request):
                 serializer = UserDetailSerializer(data=user_data, context={'user': user, 'user_type':'doctor'})
                 if serializer.is_valid():
                     serializer.save()
-                    user = authenticate(username=username, password=password)
-                    login(request, user)
                     request.session['user_type'] = 'doctor'
-                    return redirect('home')
+                    request.session['email'] = email
+                    return redirect('google_auth_redirect')
                 else:
                     print(serializer.errors)
             except Exception as e:
@@ -201,3 +254,86 @@ def post_blog(request):
         else:
             msg = "Invalid Input"
     return render(request, 'add_blog.html', {'msg': msg, 'data': data})
+
+def appointment(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    elif request.session.get('user_type') != 'patient':
+        return redirect('home')
+    doctors = UserDetail.objects.filter(user_type="doctor")
+    serializer = UserDetailSerializer(doctors, many=True)
+    return render(request, 'appointment.html', {'doctors': doctors})
+
+def book_appointment(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    elif request.session.get('user_type') != 'patient':
+        return redirect('home')
+    
+    msg = ''
+    if request.method == "POST":
+        speciality = request.POST.get('required_speciality', '')
+        date_str = request.POST.get('date', '')
+        time_str = request.POST.get('time', '') 
+        try:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            time = datetime.strptime(time_str, '%H:%M').time()
+        except Exception as e:
+            print(e)
+            msg = 'Invalid date or time format'
+            return render(request, 'book_appointment.html', {'msg': msg})
+        
+        doctor = User.objects.get(id=id)
+        doctor_detail = UserDetail.objects.get(user=doctor)
+        patient = request.user
+        
+        start_datetime = datetime.combine(date, time)
+        end_datetime = start_datetime + timedelta(minutes=45)
+
+        if start_datetime < datetime.now():
+            msg = "Appointment date cannot be in the past."
+        else:
+            credentials_data = json.loads(doctor_detail.google_auth_token)
+            credentials = google.oauth2.credentials.Credentials(
+                token=credentials_data['token'],
+                refresh_token=credentials_data['refresh_token'],
+                token_uri=credentials_data['token_uri'],
+                client_id=credentials_data['client_id'],
+                client_secret=credentials_data['client_secret']
+            )
+
+            # Refresh the access token if necessary
+            if credentials.expired:
+                credentials.refresh(google_requests.Request())
+            service = build('calendar', 'v3', credentials=credentials)
+            event = {
+                'summary': f'Appointment with {doctor.get_full_name()}',
+                'description': f'Appointment with {doctor.get_full_name()} for {speciality}',
+                'start': {
+                    'dateTime': start_datetime.isoformat(),
+                    'timeZone': 'UTC+5:30',
+                },
+                'end': {
+                    'dateTime': end_datetime.isoformat(),
+                    'timeZone': 'UTC+5:30',
+                },
+                'reminders': {
+                    'useDefault': False,
+                    'overrides': [
+                        {'method': 'email', 'minutes': 24 * 60},
+                        {'method': 'popup', 'minutes': 30},
+                    ],
+                },
+                'location': 'Medical Center',
+                'attendees': [
+                    {'email': doctor.email},
+                    {'email': patient.email}
+                ],
+                'visibility': 'default'
+            }
+
+            event = service.events().insert(calendarId='primary', body=event).execute()
+            print('Event created:', event.get('htmlLink'))
+            return render(request, 'confirmation.html', {'profile_picture': doctor_detail.profile_picture, 'name': doctor.get_full_name(), 'date': date, 'start_time': start_datetime.time(), 'end_time': end_datetime.time()})
+    
+    return render(request, 'book_appointment.html', {'msg': msg})

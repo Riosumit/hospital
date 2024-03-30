@@ -41,4 +41,3 @@ class DetailBlogSerializer(serializers.ModelSerializer):
             summary_shortened += ' ...'
         return summary_shortened
 
-    

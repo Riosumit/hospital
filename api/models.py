@@ -10,6 +10,7 @@ class UserDetail(models.Model):
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
     pincode = models.CharField(max_length=6)
+    google_auth_token = models.CharField(max_length=2000, blank=True, null=True)
     user_type = models.CharField(max_length=10, choices=[('patient', 'Patient'), ('doctor', 'Doctor')])
 
 class Blog(models.Model):

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from .views import doctor_signup, patient_signup, user_login, user_logout, home, dashboard, post_blog
+from .views import doctor_signup, patient_signup, user_login, user_logout, home, dashboard, post_blog, appointment, book_appointment, google_auth_callback, google_auth_redirect
 from django.conf import settings
 from django.views.static import serve
 
@@ -26,9 +26,13 @@ urlpatterns = [
     path('patient/signup', patient_signup, name='patient_signup'),
     path('login', user_login, name='login'),
     path('logout', user_logout, name='logout'),
+    path('auth/google/', google_auth_redirect, name='google_auth_redirect'),
+    path('auth/google/callback/', google_auth_callback, name='google_auth_callback'),
     path('home', home, name='home'),
     path('post-blog', post_blog, name='post_blog'),
     path('dashboard', dashboard, name='dashboard'),
+    path('appointment', appointment, name='appointment'),
+    path('appointment/book_appointment/<int:id>', book_appointment, name='book_appointment'),
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
 ]

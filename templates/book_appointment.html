@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/addblog.css' %}">
+    <title>Book Appointment</title>
+</head>
+<body>
+    <nav>
+        <a href="home"><div class="title">
+            <i class="fa fa-hospital-o" aria-hidden="true" style="font-size: 34px; padding: 0px 15px;"></i>
+            <h1>Hospital</h1>
+        </div></a>
+        <div class="links">
+            <a href="/appointment" class="appointment">Book Appointment</a>
+            <a href="/dashboard"><i class="fa fa-user" aria-hidden="true" style="font-size: 35px;"></i></a>
+            <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true" style="font-size: 35px;"></i></a>
+        </div>
+    </nav>
+    <div class="form-box">
+        <h1>Book Appointment</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="summary">Required Speciality :
+                <textarea id="summary" name="summary" rows="5" required>{{ data.summary }}</textarea>
+            </label>
+            <label for="date">Date of Appointment :<br>
+                <input type="date" id="date" name="date">
+            </label>
+            <label for="time">Time :<br>
+                <input type="time" id="time" name="time">
+            </label>
+            <p>{{msg}}</p>
+            <input type="submit" value="Confirm">
+        </form>
+    </div>
+</body>
+</html>

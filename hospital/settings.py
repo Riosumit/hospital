@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$p2at_j#1$)=xi2eaohvgfe$koxcqvw2!hwrzzo4u&dk=dhowq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -148,3 +148,8 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+GOOGLE_OAUTH2_CLIENT_ID = '274783570595-d50u7k1e9rmg804i5susufd2q5m1ui08.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = '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'
+GOOGLE_OAUTH2_CALLBACK_URL = 'http://localhost:8000/auth/google/callback'
